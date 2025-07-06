@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Mail, Phone, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, ArrowUpRight, Menu, X } from "lucide-react";
 
 const Contact = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
@@ -19,6 +21,10 @@ const Contact = () => {
         staggerChildren: 0.1,
       },
     },
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
   return (
     <div className="min-h-screen bg-black text-white font-figtree overflow-x-hidden">
@@ -122,24 +128,60 @@ const Contact = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {/* Mobile: Home button */}
-            <Link to="/" className="md:hidden">
-              <Button className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3">
+            {/* Mobile: Menu button */}
+            <div className="md:hidden relative">
+              <Button
+                onClick={toggleMenu}
+                className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3"
+              >
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   initial={{ x: "-100%" }}
                   whileHover={{ x: "100%" }}
                   transition={{ duration: 0.6 }}
                 />
-                Home
-                <motion.div
-                  whileHover={{ rotate: 45 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ArrowUpRight className="w-4 h-4 ml-1" />
-                </motion.div>
+                {isMenuOpen ? (
+                  <X className="w-4 h-4" />
+                ) : (
+                  <Menu className="w-4 h-4" />
+                )}
               </Button>
-            </Link>
+
+              {/* Mobile Menu Dropdown */}
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-12 right-0 bg-cocrew-dark border border-cocrew-darkgray rounded-lg shadow-lg py-2 min-w-[120px] z-50"
+                  >
+                    <Link
+                      to="/"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      to="/about"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      About
+                    </Link>
+                    <Link
+                      to="/contact"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Contact
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             {/* Desktop: Get in touch button */}
             <Link to="/contact" className="hidden md:block">
               <Button className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3">
@@ -221,7 +263,7 @@ const Contact = () => {
                 </div>
                 <h3 className="text-lg font-semibold text-white">E-mail</h3>
               </div>
-              <p className="text-gray-400">cocrew.in@gmail.com</p>
+              <p className="text-gray-400">goraksh.verma@cocrew.in</p>
             </motion.div>
 
             <motion.div

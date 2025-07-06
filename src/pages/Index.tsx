@@ -28,6 +28,8 @@ import {
   BarChart3,
   DollarSign,
   Globe,
+  Menu,
+  X,
 } from "lucide-react";
 
 // Animation variants
@@ -136,6 +138,7 @@ const FloatingParticles = () => {
 
 const Index = () => {
   const { scrollYProgress } = useScroll();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const services = [
     {
@@ -322,6 +325,18 @@ const Index = () => {
     },
   ];
 
+  // Scroll function
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="min-h-screen bg-black text-white font-figtree overflow-x-hidden">
       {/* Navigation */}
@@ -424,8 +439,63 @@ const Index = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/contact">
-              <Button className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3 max-sm:w-[132px]">
+            {/* Mobile: Menu button */}
+            <div className="md:hidden relative">
+              <Button
+                onClick={toggleMenu}
+                className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.6 }}
+                />
+                {isMenuOpen ? (
+                  <X className="w-4 h-4" />
+                ) : (
+                  <Menu className="w-4 h-4" />
+                )}
+              </Button>
+
+              {/* Mobile Menu Dropdown */}
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-12 right-0 bg-cocrew-dark border border-cocrew-darkgray rounded-lg shadow-lg py-2 min-w-[120px] z-50"
+                  >
+                    <Link
+                      to="/"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      to="/about"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      About
+                    </Link>
+                    <Link
+                      to="/contact"
+                      className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-cocrew-purple/20 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Contact
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            {/* Desktop: Get in touch button */}
+            <Link to="/contact" className="hidden md:block">
+              <Button className="bg-cocrew-purple hover:bg-cocrew-purple/90 text-white relative overflow-hidden group px-6 py-3">
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   initial={{ x: "-100%" }}
@@ -568,6 +638,7 @@ const Index = () => {
                   borderWidth: "1px",
                   boxShadow: "1px 1px 3px 0px rgba(0, 0, 0, 1)",
                 }}
+                onClick={() => scrollToSection("services")}
               >
                 View services
               </Button>
@@ -662,6 +733,7 @@ const Index = () => {
 
       {/* Services Section */}
       <motion.section
+        id="services"
         className="py-20 md:py-32"
         initial="initial"
         whileInView="animate"
@@ -786,7 +858,7 @@ const Index = () => {
       </motion.section>
 
       {/* Process Section */}
-      <section className="py-20 md:py-32">
+      <section id="process" className="py-20 md:py-32">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="bg-cocrew-dark text-white border-cocrew-darkgray mb-6">
@@ -839,7 +911,7 @@ const Index = () => {
       </section>
 
       {/* Case Studies Section */}
-      <section className="py-20 md:py-32">
+      <section id="case-studies" className="py-20 md:py-32">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="bg-cocrew-dark text-white border-cocrew-darkgray mb-6">
@@ -937,6 +1009,7 @@ const Index = () => {
 
       {/* Benefits Section */}
       <motion.section
+        id="benefits"
         className="py-20 md:py-32"
         initial="initial"
         whileInView="animate"
@@ -990,6 +1063,7 @@ const Index = () => {
 
       {/* Pricing Section */}
       <motion.section
+        id="pricing"
         className="py-20 md:py-32"
         initial="initial"
         whileInView="animate"
@@ -1213,36 +1287,36 @@ const Index = () => {
             <div>
               <h4 className="text-lg font-medium mb-4">Links</h4>
               <div className="space-y-2">
-                <a
-                  href="#services"
-                  className="block text-gray-400 hover:text-white transition-colors"
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
                 >
                   Services
-                </a>
-                <a
-                  href="#process"
-                  className="block text-gray-400 hover:text-white transition-colors"
+                </button>
+                <button
+                  onClick={() => scrollToSection("process")}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
                 >
                   Process
-                </a>
-                <a
-                  href="#case-studies"
-                  className="block text-gray-400 hover:text-white transition-colors"
+                </button>
+                <button
+                  onClick={() => scrollToSection("case-studies")}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
                 >
                   Case studies
-                </a>
-                <a
-                  href="#benefits"
-                  className="block text-gray-400 hover:text-white transition-colors"
+                </button>
+                <button
+                  onClick={() => scrollToSection("benefits")}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
                 >
                   Benefits
-                </a>
-                <a
-                  href="#pricing"
-                  className="block text-gray-400 hover:text-white transition-colors"
+                </button>
+                <button
+                  onClick={() => scrollToSection("pricing")}
+                  className="block text-gray-400 hover:text-white transition-colors text-left"
                 >
                   Pricing
-                </a>
+                </button>
               </div>
             </div>
 
